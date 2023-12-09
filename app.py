@@ -3,31 +3,50 @@ from flask import Flask,request,jsonify
 from PIL import Image
 import cv2
 import torch
-import math 
-import function.utils_rotate as utils_rotate
+import function.utils_rotate as utils_rotatecle
 from IPython.display import display
 import os
-import time
-import argparse
 import function.helper as helper
+from user.user_service import add_user, check_user_exist
+from vehicle.vehicle_service import get_vehicle_infor, add_vehicle_infor
+
 
 app=Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-# ap = argparse.ArgumentParser()
-# ap.add_argument('-i', '--image', required=True, help='path to input image')
-# args = ap.parse_args()
 
 yolo_LP_detect = torch.hub.load('yolov5', 'custom', path='model/LP_detector.pt', force_reload=True, source='local')
 yolo_license_plate = torch.hub.load('yolov5', 'custom', path='model/LP_ocr.pt', force_reload=True, source='local')
 yolo_license_plate.conf = 0.60
 
-# img = cv2.imread(args.image)
-
-
 @app.route('/')
 def welcome():
     return jsonify(welcome = 'wfd');
+
+@app.route('/login_user',methods=['POST'])
+def check_login_user():
+    email = request.form['email']
+    name = request.form['name']
+    urlPhoto = request.form['urlPhoto']
+    isCheck = check_user_exist(email)
+    if(isCheck == False):
+        add_user(email, name, urlPhoto)
+    return jsonify(isCheck)
+
+@app.route('/vehicle_infor',methods=['POST'])
+def check_vehicle_infor():
+    email = request.form['email']
+    return jsonify(get_vehicle_infor(email));
+
+@app.route('/add_vehicle',methods=['POST'])
+def add_vehicle():
+    vehicle_id = request.form['vehicle_id']
+    role = request.form['role']
+    vehicle_model = request.form['vehicle_model']
+    vehicle_color = request.form['vehicle_color']
+    vehicle_type = request.form['vehicle_type']
+    user_id = request.form['user_id']
+    add_vehicle_infor(vehicle_id, role, vehicle_model, vehicle_color, vehicle_type, user_id)
+    return jsonify(get_vehicle_infor(user_id));
 
 @app.route("/upload",methods=['POST'])
 def upload():
@@ -76,8 +95,8 @@ def upload():
                             break
                     if flag == 1:
                         break
-        print(list_read_plates)
-        return jsonify(welcome = 'awd');
+        result = list(list_read_plates)
+        return jsonify(number_plate = str(list_read_plates));
 
 if __name__=='__main__':
     app.run()
