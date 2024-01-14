@@ -1,26 +1,12 @@
-from flask import Flask,request,jsonify
-
-from PIL import Image
-import cv2
-import torch
-import function.utils_rotate as utils_rotatecle
-from IPython.display import display
-import os
-import function.helper as helper
-from user.user_service import add_user, check_user_exist
-from vehicle.vehicle_service import get_vehicle_infor, add_vehicle_infor
-
+from lib import *
 
 app=Flask(__name__)
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+CORS(app)
+
 
 yolo_LP_detect = torch.hub.load('yolov5', 'custom', path='model/LP_detector.pt', force_reload=True, source='local')
 yolo_license_plate = torch.hub.load('yolov5', 'custom', path='model/LP_ocr.pt', force_reload=True, source='local')
 yolo_license_plate.conf = 0.60
-
-@app.route('/')
-def welcome():
-    return jsonify(welcome = 'wfd');
 
 @app.route('/login_user',methods=['POST'])
 def check_login_user():
@@ -45,58 +31,119 @@ def add_vehicle():
     vehicle_color = request.form['vehicle_color']
     vehicle_type = request.form['vehicle_type']
     user_id = request.form['user_id']
-    add_vehicle_infor(vehicle_id, role, vehicle_model, vehicle_color, vehicle_type, user_id)
+    expires = request.form['expires']
+    phone = request.form['phone']
+    add_vehicle_infor(vehicle_id, role, vehicle_model, vehicle_color, vehicle_type, user_id, expires, phone)
     return jsonify(get_vehicle_infor(user_id));
+
+@app.route('/remove_active_vehicle',methods=['POST'])
+def remove_active_vehicle():
+    vehicle_id = request.form['vehicle_id']
+    remove_active(vehicle_id)
+    return jsonify(message = 'Deleted vehicle!');
+
+@app.route('/update_vehicle',methods=['POST'])
+def update_vehicle():
+    vehicle_id = request.form['vehicle_id']
+    role = request.form['role']
+    vehicle_color = request.form['vehicle_color']
+    expires = request.form['expires']
+    phone = request.form['phone']
+    update_vehicle_infor(vehicle_id, role, vehicle_color, expires, phone)
+    return jsonify(message = 'Updated vehicle!');
+
+
+@app.route('/login', methods=['POST'])
+def login_admin():
+    email = request.form['email']
+    password = request.form['password']
+    hashed_password = hashlib.md5(password.encode()).hexdigest()
+    if(len(login(email, hashed_password)) != 0):
+        return jsonify(message = 'Login successful');
+    else:
+        return jsonify(message = 'Login failed'); 
+
+@app.route('/get_all_vehicle', methods=['POST'])
+def get_all_vehicle():
+    return jsonify(get_all_vehicles());
+
+@app.route('/get_logs', methods=['POST'])
+def get_log():
+    return jsonify(get_logs());
+
+@app.route('/add_staff', methods=['POST'])
+def add_staff():
+    phone = request.form['phone']
+    plate_number = request.form['plate_number']
+    expires = request.form['expires']
+    role = request.form['role']
+    name = request.form['name']
+    model = request.form['model']
+    add_vehicle_staff(name, phone, model, plate_number, role, expires)
+    return jsonify(message = 'Success'); 
+
+@app.route('/get_staff', methods=['POST'])
+def get_staff():
+    return jsonify(get_vehicle_staff()); 
+
+@app.route('/remove_staff', methods=['POST'])
+def remove_active_staff():
+    id_staff = request.form['id']
+    remove_staff(id_staff)
+    return jsonify(message = 'Deleted vehicle!');
+
+@app.route('/update_staff', methods=['POST'])
+def update_staff():
+    id_staff = request.form['id']
+    phone = request.form['phone']
+    plate_number = request.form['plate_number']
+    expires = request.form['expires']
+    role = request.form['role']
+    name = request.form['name']
+    model = request.form['model']
+    update_staffs(id_staff, name, phone, model, plate_number, role, expires)
+    return jsonify(message = 'Update success!');
+
+@app.route('/get_logs_table', methods=['POST'])
+def get_log_tables():
+    role = request.form['role']
+    return jsonify(get_log_table(role));
+
+@app.route('/get_all_vehicle_admin', methods=['POST'])
+def get_all_vehicles_admin():
+    role = request.form['role']
+    return jsonify(get_all_vehicle_admin(role));
+
+@app.route('/send_sms', methods=['POST'])
+def sent_sms():
+    phone = request.form['phone']
+    content = request.form['content']
+    send_sms(phone, content)
+    return jsonify(message = 'Sent!');
 
 @app.route("/upload",methods=['POST'])
 def upload():
-    target = os.path.join(APP_ROOT, 'images/')
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    else:
-        print("Couldn't create upload directory: {}".format(target))
+    return jsonify(number_plate = detect()[0]);
 
-    if request.files:
-        img = request.files["upload"]
-        filename = img.filename
+@app.route("/detect_vehicle",methods=['POST'])
+def detects():
+    return jsonify(detect_vehicle());
 
-        destination = "/".join([target, filename])
-        img.save(destination)
-        img = cv2.imread(destination);
-        os.remove(destination);
 
-        plates = yolo_LP_detect(img, size=640)
-        list_plates = plates.pandas().xyxy[0].values.tolist()
-        list_read_plates = set()
-        if len(list_plates) == 0:
-            lp = helper.read_plate(yolo_license_plate,img)
-            if lp != "unknown":
-                cv2.putText(img, lp, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
-                list_read_plates.add(lp)
-        else:
-            for plate in list_plates:
-                flag = 0
-                x = int(plate[0]) # xmin
-                y = int(plate[1]) # ymin
-                w = int(plate[2] - plate[0]) # xmax - xmin
-                h = int(plate[3] - plate[1]) # ymax - ymin  
-                crop_img = img[y:y+h, x:x+w]
-                cv2.rectangle(img, (int(plate[0]),int(plate[1])), (int(plate[2]),int(plate[3])), color = (0,0,225), thickness = 2)
-                cv2.imwrite("crop.jpg", crop_img)
-                rc_image = cv2.imread("crop.jpg")
-                lp = ""
-                for cc in range(0,2):
-                    for ct in range(0,2):
-                        lp = helper.read_plate(yolo_license_plate, utils_rotate.deskew(crop_img, cc, ct))
-                        if lp != "unknown":
-                            list_read_plates.add(lp)
-                            cv2.putText(img, lp, (int(plate[0]), int(plate[1]-10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
-                            flag = 1
-                            break
-                    if flag == 1:
-                        break
-        result = list(list_read_plates)
-        return jsonify(number_plate = str(list_read_plates));
+@app.route("/get_request",methods=['POST'])
+def get_requests():
+    return jsonify(get_request());
+
+
+@app.route("/accpect_request",methods=['POST'])
+def accpect_requests():
+    vehicle_id = request.form['vehicle_id']
+    return jsonify(accpect_request(vehicle_id));
+
+@app.route("/remove_request",methods=['POST'])
+def remove_requests():
+    vehicle_id = request.form['vehicle_id']
+    return jsonify(remove_request(vehicle_id));
 
 if __name__=='__main__':
-    app.run()
+    app.run(host='192.168.43.18', port=500, debug=True, threaded=False)
