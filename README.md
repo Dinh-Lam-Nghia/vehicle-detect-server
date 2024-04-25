@@ -12,4 +12,3 @@ This repository provides you with a detailed guide on how to training and build 
   pip install -r ./requirement.txt
 ```
 
-nghia
