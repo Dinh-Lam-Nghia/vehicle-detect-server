@@ -38,7 +38,7 @@ This repository provides you with a detailed guide on how to training and build 
 ```
 **fix_err**
 
-  - Download yolov5 (old version) from this link: [yolov5 - google drive](https://drive.google.com/file/d/1g1u7M4NmWDsMGOppHocgBKjbwtDA-uIu/view)
+  - Download yolov5 (old version) from this link: [yolov5 - google drive](https://drive.google.com/file/d/1Vv_N_KgGrELZg7ratC-JewzzhQM1q4kg/view?usp=sharing)
   - Copy yolov5 folder to project folder
 
 
