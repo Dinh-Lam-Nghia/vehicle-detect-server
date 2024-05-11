@@ -20,7 +20,7 @@ This repository provides you with a detailed guide on how to training and build 
 
 ### err
 ```err
-      vehicle-detect-server> python -m flask run 
+
    Traceback (most recent call last):
     File "<frozen runpy>", line 198, in _run_module_as_main
     File "<frozen runpy>", line 88, in _run_code
@@ -36,7 +36,7 @@ This repository provides you with a detailed guide on how to training and build 
    FileNotFoundError: [Errno 2] No such file or directory: '[......]\\vehicle-detect-server\\yolov5\\hubconf.py'
 
 ```
-
+###fix_err
   - Download yolov5 (old version) from this link: [yolov5 - google drive](https://drive.google.com/file/d/1g1u7M4NmWDsMGOppHocgBKjbwtDA-uIu/view)
   - Copy yolov5 folder to project folder
 
