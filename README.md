@@ -18,7 +18,7 @@ This repository provides you with a detailed guide on how to training and build 
   flask run -h 192.168.1.100
   ```
 
-
+# err
 ```err
       vehicle-detect-server> python -m flask run 
    Traceback (most recent call last):
@@ -35,7 +35,6 @@ This repository provides you with a detailed guide on how to training and build 
     File "<frozen importlib._bootstrap_external>", line 1130, in get_data
    FileNotFoundError: [Errno 2] No such file or directory: '[......]\\vehicle-detect-server\\yolov5\\hubconf.py'
 
-   git 
 ```
 
   - Download yolov5 (old version) from this link: [yolov5 - google drive](https://drive.google.com/file/d/1g1u7M4NmWDsMGOppHocgBKjbwtDA-uIu/view)
