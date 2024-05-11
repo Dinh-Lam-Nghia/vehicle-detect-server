@@ -15,7 +15,7 @@ This repository provides you with a detailed guide on how to training and build 
 ## run
 
   ```python
-  flask run -h 192.168.1.100
+  flask run -h "IPv4 Address"
   ```
 
 ### err
