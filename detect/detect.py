@@ -124,19 +124,18 @@ def get_vehicle_infor(vehicleID: str):
     result = cursor.fetchall() 
     result = convert_to_dict(cursor, result)
     cursor.close()
-    get_vehicle_staff(vehicleID)
+    # get_vehicle_staff(vehicleID)
     if(len(result) != 0):
-        if(get_location(result[0]['id'], 0) == 0):
-            insert_to_log(result[0]['id'], 0, 1)
+        if(get_location(result[0]['vehicle_id'], 0) == 0):
+            insert_to_log(result[0]['vehicle_id'], 0, 1)
         else:
-            insert_to_log(result[0]['id'], 0, 0)
+            insert_to_log(result[0]['vehicle_id'], 0, 0)
         return result
     else:
         return get_vehicle_staff(vehicleID)
 
 
 def get_location(vehicleID: str, role: int):
-    print(vehicleID)
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
     sql = f"SELECT * FROM log WHERE role = {role} AND vehicle_id = '{vehicleID}' ORDER BY time DESC"
@@ -144,7 +143,10 @@ def get_location(vehicleID: str, role: int):
     result = cursor.fetchall() 
     result = convert_to_dict(cursor, result)
     cursor.close()
-    return result[0]['status']
+    if(len(result) != 0):
+        return result[0]['status']
+    else:
+        return 0
 
 def get_vehicle_staff(vehicleID: str):
     conn = mysql.connector.connect(**db_config)
@@ -155,11 +157,13 @@ def get_vehicle_staff(vehicleID: str):
     result = convert_to_dict(cursor, result)
     cursor.close()
     if(len(result) != 0):
-        if(get_location(result[0]['id'], 1) == 0):
-            insert_to_log(result[0]['id'], 1, 1)
+        if(get_location(result[0]['vehicle_id'], 1) == 0):
+            insert_to_log(result[0]['vehicle_id'], 1, 1)
         else:
-            insert_to_log(result[0]['id'], 1, 0)
-    return result
+            insert_to_log(result[0]['vehicle_id'], 1, 0)
+        return result
+    else:
+        return "fail"
 
 
 

@@ -1,3 +1,4 @@
+from common import convert_to_dict
 from db import *
 
 def check_user_exist(email: str):
@@ -19,3 +20,13 @@ def add_user(email: str, name: str, url_photo: str):
     val = (name, email, url_photo)
     cursor.execute(sql, val)
     conn.commit()
+
+def get_onlyOne_user(email: str):
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor()
+    sql_get_onlyOne_user = f"SELECT * FROM user WHERE email = '{email}'" 
+    cursor.execute(sql_get_onlyOne_user)
+    result = cursor.fetchall() 
+    result = convert_to_dict(cursor, result)
+    cursor.close()
+    return result

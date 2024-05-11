@@ -1,4 +1,5 @@
 from lib import *
+from user.user_service import get_onlyOne_user
 
 app=Flask(__name__)
 CORS(app)
@@ -17,6 +18,11 @@ def check_login_user():
     if(isCheck == False):
         add_user(email, name, urlPhoto)
     return jsonify(isCheck)
+
+@app.route('/get_onlyOne_user',methods=['POST'])
+def check_onlyOne_user():
+    email = request.form['email']
+    return jsonify(get_onlyOne_user(email))
 
 @app.route('/vehicle_infor',methods=['POST'])
 def check_vehicle_infor():
@@ -128,7 +134,7 @@ def upload():
 @app.route("/detect_vehicle",methods=['POST'])
 def detects():
     return jsonify(detect_vehicle());
-
+   
 
 @app.route("/get_request",methods=['POST'])
 def get_requests():
@@ -137,13 +143,13 @@ def get_requests():
 
 @app.route("/accpect_request",methods=['POST'])
 def accpect_requests():
-    vehicle_id = request.form['vehicle_id']
-    return jsonify(accpect_request(vehicle_id));
+    id = request.form['id']
+    return jsonify(accpect_request(id));
 
 @app.route("/remove_request",methods=['POST'])
 def remove_requests():
-    vehicle_id = request.form['vehicle_id']
-    return jsonify(remove_request(vehicle_id));
+    id = request.form['id']
+    return jsonify(remove_request(id));
 
 if __name__=='__main__':
-    app.run(host='192.168.43.18', port=500, debug=True, threaded=False)
+    app.run(host='192.168.2.70', port=500, debug=True, threaded=False)

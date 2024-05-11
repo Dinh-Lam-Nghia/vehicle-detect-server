@@ -12,44 +12,31 @@ This repository provides you with a detailed guide on how to training and build 
   pip install -r ./requirement.txt
 ```
 
-- **Pretrained model** provided in ./model folder in this repo 
+## run:
 
-- **Download yolov5 (old version) from this link:** [yolov5 - google drive](https://drive.google.com/file/d/1g1u7M4NmWDsMGOppHocgBKjbwtDA-uIu/view?usp=sharing)
+  flask run -h 192.168.1.100
 
-- Copy yolov5 folder to project folder
 
-## Run License Plate Recognition
+'''err
+  #    vehicle-detect-server> python -m flask run 
+  # Traceback (most recent call last):
+  #  File "<frozen runpy>", line 198, in _run_module_as_main
+  #  File "<frozen runpy>", line 88, in _run_code
+  #  File "C:\Users\adminln\AppData\Roaming\Python\Python311\site-packages\flask\__main__.py", line 3, in <module>
+  #    main()
+  #  File "C:\Users\adminln\AppData\Roaming\Python\Python311\site-packages\flask\cli.py", line 1105, in main
+  #    cli.main()
+  # ......................
+  # ...........
+  #  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  #  File "<frozen importlib._bootstrap_external>", line 1073, in get_code
+  #  File "<frozen importlib._bootstrap_external>", line 1130, in get_data
+  # FileNotFoundError: [Errno 2] No such file or directory: '[......]\\vehicle-detect-server\\yolov5\\hubconf.py'
 
-```bash
-  # run inference on webcam (15-20fps if there is 1 license plate in scene)
-  python webcam.py 
 
-  # run inference on image
-  python lp_image.py -i test_image/3.jpg
+  - Download yolov5 (old version) from this link: [yolov5 - google drive](https://drive.google.com/file/d/1g1u7M4NmWDsMGOppHocgBKjbwtDA-uIu/view)
+  - Copy yolov5 folder to project folder
 
-  # run LP_recognition.ipynb if you want to know how model work in each step
-```
+'''
 
-## Result
-![Demo 1](result/image.jpg)
 
-![Vid](result/video_1.gif)
-
-## Vietnamese Plate Dataset
-
-This repo uses 2 sets of data for 2 stage of license plate recognition problem:
-
-- [License Plate Detection Dataset](https://drive.google.com/file/d/1xchPXf7a1r466ngow_W_9bittRqQEf_T/view?usp=sharing)
-- [Character Detection Dataset](https://drive.google.com/file/d/1bPux9J0e1mz-_Jssx4XX1-wPGamaS8mI/view?usp=sharing)
-
-Thanks [Mì Ai](https://www.miai.vn/thu-vien-mi-ai/) and [winter2897](https://github.com/winter2897/Real-time-Auto-License-Plate-Recognition-with-Jetson-Nano/blob/main/doc/dataset.md) for sharing a part in this dataset.
-
-## Training
-
-**Training code for Yolov5:**
-
-Use code in ./training folder
-```bash
-  training/Plate_detection.ipynb     #for LP_Detection
-  training/Letter_detection.ipynb    #for Letter_detection
-```
