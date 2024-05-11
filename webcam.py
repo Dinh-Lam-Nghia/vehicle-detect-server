@@ -2,6 +2,7 @@ from PIL import Image
 import cv2
 import torch
 import math 
+from detect.detect import get_vehicle_infor
 import function.utils_rotate as utils_rotate
 from IPython.display import display
 import os
@@ -17,14 +18,15 @@ yolo_license_plate.conf = 0.60
 prev_frame_time = 0
 new_frame_time = 0
 
-vid = cv2.VideoCapture(1)
+vid = cv2.VideoCapture(0)
 # vid = cv2.VideoCapture("1.mp4")
+vehicle = '0'
 while(True):
     ret, frame = vid.read()
     
     plates = yolo_LP_detect(frame, size=640)
     list_plates = plates.pandas().xyxy[0].values.tolist()
-    list_read_plates = set()
+    list_read_plates = set() 
     for plate in list_plates:
         flag = 0
         x = int(plate[0]) # xmin
@@ -54,6 +56,13 @@ while(True):
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    s = f'"'.join(list_read_plates)
+    if( s != ""): #vehicle != s and
+        vehicle = s
+        print(f'{get_vehicle_infor(vehicle)}' + f"\t\"{vehicle}\"")
+        time.sleep(10)
+    # else: 
+    #     print("...")
 
 vid.release()
 cv2.destroyAllWindows()
