@@ -130,7 +130,7 @@ def get_vehicle_infor(vehicleID: str):
             insert_to_log(result[0]['vehicle_id'], 0, 1)
         else:
             insert_to_log(result[0]['vehicle_id'], 0, 0)
-        return result
+        return True
     else:
         return get_vehicle_staff(vehicleID)
 
@@ -161,9 +161,9 @@ def get_vehicle_staff(vehicleID: str):
             insert_to_log(result[0]['vehicle_id'], 1, 1)
         else:
             insert_to_log(result[0]['vehicle_id'], 1, 0)
-        return result
+        return True
     else:
-        return "fail"
+        return False
 
 
 
