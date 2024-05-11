@@ -14,7 +14,7 @@ def get_vehicle_staff():
 def add_vehicle_staff(name: str, phone: str, model: str, plate_number: str, role: int, expires: str):
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
-    sql = "INSERT INTO vehicle_staff (phone, plate_number, expires, role, name, model) VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO vehicle_staff (phone, vehicle_id, expires, role, name, vehicle_model) VALUES (%s, %s, %s, %s, %s, %s)"
     val = (phone, plate_number, expires, role, name, model)
     cursor.execute(sql, val)
     conn.commit()
@@ -29,6 +29,6 @@ def remove_staff(id: str):
 def update_staffs(id: str, name: str, phone: str, model: str, plate_number: str, role: int, expires: str):
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
-    sql = f"UPDATE vehicle_staff SET phone = '{phone}', plate_number = '{plate_number}', expires = '{expires}', role = '{role}', name = '{name}', model = '{model}' WHERE id = '{id}'"
+    sql = f"UPDATE vehicle_staff SET phone = '{phone}', vehicle_id = '{plate_number}', expires = '{expires}', role = '{role}', name = '{name}', vehicle_model = '{model}' WHERE id = '{id}'"
     cursor.execute(sql)
     conn.commit()

@@ -36,7 +36,7 @@ def update_vehicle_infor(vehicle_id: str, role: int, vehicle_color: str, expires
 def get_all_vehicles():
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
-    sql = f"SELECT * FROM vehicle" 
+    sql = f"SELECT * FROM vehicle WHERE active <1" 
     cursor.execute(sql)
     result = cursor.fetchall() 
     result = convert_to_dict(cursor, result)

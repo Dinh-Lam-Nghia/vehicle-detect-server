@@ -2,8 +2,8 @@ import mysql.connector
 
 db_config = {
     'host': 'localhost',
-    'user': 'root',
-    'password': '11223344',
+    'user': 'sa',
+    'password': '123456',
     'database': 'vehicle_db'
 }
 
