@@ -152,4 +152,4 @@ def remove_requests():
     return jsonify(remove_request(id));
 
 if __name__=='__main__':
-    app.run(host='192.168.2.70', port=500, debug=True, threaded=False)
+    app.run(host='192.168.1.6', port=5000, debug=True, threaded=False)

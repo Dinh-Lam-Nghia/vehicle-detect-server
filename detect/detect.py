@@ -33,6 +33,7 @@ def detect():
         plates = yolo_LP_detect(img, size=640)
         list_plates = plates.pandas().xyxy[0].values.tolist()
         list_read_plates = set()
+        print(f"list_plates {list_plates}")
         if len(list_plates) == 0:
             lp = helper.read_plate(yolo_license_plate,img)
             if lp != "unknown":
@@ -53,15 +54,16 @@ def detect():
                 for cc in range(0,2):
                     for ct in range(0,2):
                         lp = helper.read_plate(yolo_license_plate, utils_rotate.deskew(crop_img, cc, ct))
+                        print(f"NGHIA lp {lp}")
                         if lp != "unknown":
-                            print(lp)
-                            list_read_plates.add(lp.replace('-', ''))
+                            list_read_plates.add(lp)#.replace('-', ''))
                             cv2.putText(img, lp.replace('-', ''), (int(plate[0]), int(plate[1]-10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
                             flag = 1
                             break
                     if flag == 1:
                         break
         result = list(list_read_plates)
+        print(f"nghia result {result}")
     return result
 
 def detect_vehicle():
@@ -104,7 +106,7 @@ def detect_vehicle():
                     for ct in range(0,2):
                         lp = helper.read_plate(yolo_license_plate, utils_rotate.deskew(crop_img, cc, ct))
                         if lp != "unknown":
-                            list_read_plates.add(lp.replace('-', ''))
+                            list_read_plates.add(lp)#.replace('-', '')
                             cv2.putText(img, lp.replace('-', ''), (int(plate[0]), int(plate[1]-10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
                             flag = 1
                             break
