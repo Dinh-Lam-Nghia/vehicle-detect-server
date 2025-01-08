@@ -17,18 +17,18 @@ def login(email: str, password: str):
 
 
 def send_sms(phone: str, content: str):
-    conn = http.client.HTTPSConnection("dkg5x1.api.infobip.com")
+    conn = http.client.HTTPSConnection("z32nnw.api.infobip.com")
     payload = json.dumps({
     "messages": [
         {
-            "destinations": [{"to":"84346056590"}],
+            "destinations": [{"to":phone}],
             "from": "ServiceSMS",
             "text": content
         }
         ]
     })
     headers = {
-        'Authorization': 'App 048f8a75bb7036d142afd7687ad4e1fd-f5525043-033b-4384-9736-d9b11a51a378',
+        'Authorization': 'App 56600f52c33a1eec99d9caf7d04b2980-2eafbbb8-8368-431d-9552-22a31a60df7f',
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
