@@ -24,7 +24,7 @@ vehicle = '0'
 while(True):
     ret, frame = vid.read()
     
-    plates = yolo_LP_detect(frame, size=640)
+    plates = yolo_LP_detect(frame, size=840)
     list_plates = plates.pandas().xyxy[0].values.tolist()
     list_read_plates = set() 
     for plate in list_plates:
@@ -59,8 +59,8 @@ while(True):
     s = f'"'.join(list_read_plates)
     if( s != ""): #vehicle != s and
         vehicle = s
-        print(f'{get_vehicle_infor(vehicle)}' + f"\t\"{vehicle}\"")
-        time.sleep(10)
+        print(f'[Debug] {get_vehicle_infor(vehicle)}' + f"\t\"{vehicle}\"")
+        time.sleep(3)
     # else: 
     #     print("...")
 

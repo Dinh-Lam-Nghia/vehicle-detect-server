@@ -17,6 +17,7 @@ This repository provides you with a detailed guide on how to training and build 
   ```python
   flask run -h "IPv4 Address"
 #  flask run -h 192.168.1.29
+# python webcam.py
   ```
 
 ### err
